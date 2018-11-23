@@ -6,8 +6,6 @@ const game = new Game()
 
 game.addObject(new GameObject())
 
-game.start()
-
 //
 // Sprites
 //
