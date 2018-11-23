@@ -10,25 +10,30 @@ class ASCIIRenderer {
 
   /**
    * @param {Game} game
-   * @param {GameObject} gameObject
+   * @param {Array<GameObject>} objects
    */
-  render(game, gameObject) {
+  render(game, objects) {
     // compute the game box string
-    const dot = '•'
-    const row = dot.repeat(game.width) + '\n'
+    const grid = new Array(game.height)
+    for (let i = 0; i <= game.height; i++) {
+      grid[i] = new Array(game.width).fill(' ')
+    }
 
-    const newString = [row, (dot + ' '.repeat(game.width - 2) + dot + '\n').repeat(game.height - 2), row]
-      .join('')
-      .trim()
+    // TODO: needs to handle objects larger than 1x1
+    for (let i = 0; i < objects.length; i++) {
+      const obj = objects[i]
+      grid[obj.y][obj.x] = obj.render() || ' '
+    }
 
     // we don't want to waste DOM updates if the text hasn't changed
-    if (newString !== this.element.innerHTML) {
+    const result = grid.map(row => row.join('')).join('\n')
+    if (result !== this.element.innerHTML) {
       // update canvas size
       this.element.style.display = 'block'
       this.element.style.width = game.width + 'ch'
       this.element.style.border = '2px solid #f00'
 
-      this.element.innerHTML = newString
+      this.element.innerHTML = result
     }
   }
 }
@@ -58,11 +63,11 @@ class Game {
   }
 
   update() {
-    this.objects.forEach(o => o.update())
+    this.objects.forEach(o => o.update(this))
   }
 
   render() {
-    this.objects.forEach(o => this.renderer.render(this, o))
+    this.renderer.render(this, this.objects)
   }
 
   play() {
@@ -82,8 +87,7 @@ class Game {
 
     this.update()
     this.render()
-
-    setTimeout(this.tick, 1000 / this.speed)
+    requestAnimationFrame(this.tick)
   }
 }
 
@@ -93,9 +97,53 @@ class Game {
 
 class GameObject {
   constructor({ x = 0, y = 0 } = {}) {
-    this.x = 0
-    this.y = 0
+    this.x = x
+    this.y = y
   }
 
+  render() {}
+
   update() {}
+}
+
+class Player extends GameObject {
+  constructor() {
+    super({ x: 40, y: 10 })
+    this.attachListeners()
+    this.handleKeydown = this.handleKeydown.bind(this)
+    this.velocity = 1
+  }
+
+  destroy() {
+    this.removeListeners()
+  }
+
+  attachListeners() {
+    window.addEventListener('keydown', this.handleKeydown)
+  }
+
+  removeListeners() {
+    window.removeEventListener('keydown', this.handleKeydown)
+  }
+
+  handleKeydown(e) {
+    console.log(e.which)
+  }
+
+  render() {
+    return '•'
+  }
+
+  update(game) {
+    const dy = this.y + this.velocity
+    if (dy > game.height) {
+      this.velocity = -1
+      this.y = game.height - 1
+    } else if (dy < 0) {
+      this.velocity = 1
+      this.y = 1
+    } else {
+      this.y = dy
+    }
+  }
 }
