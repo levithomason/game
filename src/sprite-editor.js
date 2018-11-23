@@ -106,9 +106,35 @@ class GameSpriteEditor {
       $sprite.classList.add('sprite-editor__sprite')
       if (isSpriteActive) $sprite.classList.add('sprite-editor__sprite--active')
 
-      const $name = document.createElement('span')
+      const $name = document.createElement('input')
+      const editableName = `✏ ${sprite.name}`
       $name.classList.add('sprite-editor__sprite-name')
-      $name.innerHTML = sprite.name
+      $name.title = 'Click to edit'
+      $name.value = editableName
+      $name.style.width = $name.value.length + 1 + 'ch'
+      $name.addEventListener('focus', e => {
+        $name.value = sprite.name
+        e.target.select()
+      })
+      $name.addEventListener('blur', e => {
+        if (sprite.name !== e.target.value) {
+          sprite.name = e.target.value
+          this.render()
+        } else {
+          $name.value = editableName
+        }
+      })
+      $name.addEventListener('keydown', e => {
+        switch (e.key) {
+          case 'Escape':
+            $name.blur()
+            break
+          case 'Enter':
+            sprite.name = e.target.value
+            this.render()
+            break
+        }
+      })
       $sprite.appendChild($name)
 
       const $frames = document.createElement('div')
