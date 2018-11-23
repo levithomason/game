@@ -1,93 +1,50 @@
-//
-// Renderers
-//
-
-class ASCIIRenderer {
-  constructor() {
-    this.element = document.createElement('pre')
-    document.body.appendChild(this.element)
-  }
-
-  /**
-   * @param {Game} game
-   * @param {Array<GameObject>} objects
-   */
-  render(game, objects) {
-    // compute the game box string
-    const grid = new Array(game.height)
-    for (let i = 0; i <= game.height; i++) {
-      grid[i] = new Array(game.width).fill(' ')
-    }
-
-    // TODO: needs to handle objects larger than 1x1
-    for (let i = 0; i < objects.length; i++) {
-      const obj = objects[i]
-      grid[obj.y][obj.x] = obj.render() || ' '
-    }
-
-    // we don't want to waste DOM updates if the text hasn't changed
-    const result = grid.map(row => row.join('')).join('\n')
-    if (result !== this.element.innerHTML) {
-      // update canvas size
-      this.element.style.display = 'block'
-      this.element.style.width = game.width + 'ch'
-      this.element.style.border = '2px solid #f00'
-
-      this.element.innerHTML = result
-    }
-  }
-}
-
-//
-// Game
-//
-
 class Game {
-  constructor({ width = 80, height = 20, renderer = new ASCIIRenderer() } = {}) {
-    this.width = width
-    this.height = height
-    this.speed = 30
+  constructor(opts = {}) {
+    this.running = false
     this.objects = []
-    this.renderer = renderer
 
-    this.addObject = this.addObject.bind(this)
-    this.update = this.update.bind(this)
-    this.render = this.render.bind(this)
-    this.play = this.play.bind(this)
-    this.pause = this.pause.bind(this)
+    this.height = opts.height || 500
+    this.width = opts.width || 500
+    this.canvas = document.getElementById('game')
+    this.ctx = this.canvas.getContext('2d')
+    this.canvas.setAttribute('width', this.width)
+    this.canvas.setAttribute('height', this.height)
+
     this.tick = this.tick.bind(this)
   }
 
-  addObject(object) {
-    this.objects.push(object)
-  }
-
-  update() {
-    this.objects.forEach(o => o.update(this))
-  }
-
-  render() {
-    this.renderer.render(this, this.objects)
-  }
-
-  play() {
-    console.log('play')
-    this.isRunning = true
-
+  start() {
+    this.running = true
     this.tick()
   }
 
   pause() {
-    console.log('pause')
-    this.isRunning = false
+    this.running = false
+  }
+
+  update() {
+    this.ctx.clearRect(0, 0, this.width, this.height)
+    for (let i = 0; i < this.objects.length; i++) {
+      this.objects[i].update(this)
+    }
+  }
+
+  render() {
+    for (let i = 0; i < this.objects.length; i++) {
+      this.objects[i].render(this)
+    }
+  }
+
+  addObject(object) {
+    this.objects[this.objects.length] = object
   }
 
   tick() {
-    if (!this.isRunning) return
-
-    this.update()
-    this.render()
-    requestAnimationFrame(this.tick)
+    if (this.running) {
+      this.update()
+      this.render()
+      requestAnimationFrame(this.tick)
+    }
   }
 }
 
@@ -96,14 +53,18 @@ class Game {
 //
 
 class GameObject {
-  constructor({ x = 0, y = 0 } = {}) {
-    this.x = x
-    this.y = y
+  constructor(opts = {}) {
+    this.height = opts.height || 5
+    this.width = opts.width || 5
+    this.sprite = opts.sprite
   }
 
-  render() {}
-
   update() {}
+
+  render(game) {
+    game.ctx.fillStyle = '#000'
+    game.ctx.fillRect(0, 0, 150, 75)
+  }
 }
 
 class Player extends GameObject {

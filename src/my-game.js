@@ -9,22 +9,30 @@ game.addObject(new GameObject())
 game.start()
 
 //
-// Images
+// Sprites
 //
 
-const playerImage = new GameImage('Player')
-playerImage.addFrame()
-playerImage.addFrame()
+const playerSprite = new GameSprite('Player')
+playerSprite.addFrame()
+playerSprite.addFrame()
+playerSprite.addFrame()
+playerSprite.addFrame()
+playerSprite.addFrame()
+playerSprite.addFrame()
+playerSprite.addFrame()
+playerSprite.addFrame()
+playerSprite.addFrame()
+playerSprite.addFrame()
 
-const bulletImage = new GameImage('Bullet')
+const bulletSprite = new GameSprite('Bullet')
 
-const enemyImage = new GameImage('Enemy')
-enemyImage.addFrame()
+const enemySprite = new GameSprite('Enemy')
+enemySprite.addFrame()
 
 //
-// Image Editor
+// Sprite Editor
 //
-const imageEditor = new GameImageEditor()
-imageEditor.addImage(playerImage)
-imageEditor.addImage(bulletImage)
-imageEditor.addImage(enemyImage)
+const spriteEditor = new GameSpriteEditor()
+spriteEditor.addSprite(playerSprite)
+spriteEditor.addSprite(bulletSprite)
+spriteEditor.addSprite(enemySprite)

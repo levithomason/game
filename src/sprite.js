@@ -1,7 +1,12 @@
-class GameImageFrame {
+class GameSpriteFrame {
+  /**
+   * @param {number} width
+   * @param {number} height
+   * @param {number[]} backgroundColor - An array containing R G B and A values.
+   */
   constructor({ width, height, backgroundColor = [255, 0, 255, 127] } = {}) {
     if (!width || !height) {
-      throw new Error(`GameImageFrame requires a width and height, received: ${width} and ${height}`)
+      throw new Error(`GameSpriteFrame requires a width and height, received: ${width} and ${height}`)
     }
 
     this.width = width
@@ -19,22 +24,24 @@ class GameImageFrame {
   }
 }
 
-class GameImage {
+class GameSprite {
   constructor(name = gameUtils.randomName(), { width = 16, height = 16 } = {}) {
     this.width = width
     this.height = height
     this.name = name
 
     this.frames = []
+    this.addFrame()
+    this.currentFrame = this.frames[0]
 
     this.speed = 30
-
-    this.addFrame()
   }
 
   addFrame() {
-    const { width, height } = this
+    this.frames.push(this.createFrame())
+  }
 
-    this.frames.push(new GameImageFrame({ width, height }))
+  createFrame({ width = this.width, height = this.height } = {}) {
+    return new GameSpriteFrame({ width, height })
   }
 }

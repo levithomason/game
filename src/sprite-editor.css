@@ -1,0 +1,93 @@
+/****************************
+       Sprite Editor
+****************************/
+
+.sprite-editor {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/****************************
+           Tools
+****************************/
+
+.sprite-editor__tools {
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 0.2rem;
+  background: #222;
+}
+
+.sprite-editor__tools .sprite-editor__tool {
+  background: #222;
+}
+
+/****************************
+            View
+****************************/
+
+.sprite-editor__view {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  min-height: 340px;
+  background: #333;
+}
+
+.sprite-editor__canvas {
+  background: url('data:sprite/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAKUlEQVQoU2NkYGAwZkAD////RxdiYBwKCv///4/hGUZGkNNRAeMQUAgAtxof+nLDzyUAAAAASUVORK5CYII=');
+  border: 1px solid black;
+}
+
+/****************************
+          Sprites
+****************************/
+
+.sprite-editor__sprites {
+  --sprites-background-color: #eee;
+  --sprites-frame-size: 32px;
+  --sprites-frame-gap: 8px;
+  --sprites-frames-per-row: 6;
+
+  width: calc(
+    var(--sprites-frame-gap) + (var(--sprites-frame-size) + var(--sprites-frame-gap)) *
+      var(--sprites-frames-per-row)
+  );
+
+  background: var(--sprites-background-color);
+}
+
+.sprite-editor__sprite {
+  background: var(--sprites-background-color);
+  padding: var(--sprites-frame-gap) 0 var(--sprites-frame-gap) var(--sprites-frame-gap);
+}
+.sprite-editor__sprite--active {
+  --sprites-background-color: #fff;
+  font-weight: bold;
+}
+
+.sprite-editor__sprite-name {
+  display: block;
+  margin-bottom: var(--sprites-frame-gap);
+}
+
+.sprite-editor__sprite-frames {
+}
+
+.sprite-editor__sprite-frame {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 var(--sprites-frame-gap) var(--sprites-frame-gap) 0;
+  width: var(--sprites-frame-size);
+  height: var(--sprites-frame-size);
+}
+.sprite-editor__sprite-frame--active {
+  box-shadow: 0 2px 0 var(--sprites-background-color), 0 6px 0 #000;
+}
+
+.sprite-editor__sprite-frame-canvas {
+  width: 100%;
+  cursor: pointer;
+}
