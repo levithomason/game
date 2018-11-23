@@ -1,0 +1,9 @@
+canvas {
+  image-rendering: pixelated;
+}
+
+#game {
+  display: block;
+  margin: 0 auto 1rem;
+  border: 1px solid black;
+}
