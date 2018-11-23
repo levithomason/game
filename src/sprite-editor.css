@@ -51,6 +51,10 @@
   --sprites-frame-gap: 8px;
   --sprites-frames-per-row: 6;
 
+  /*
+   Calculate the width to perfectly fit the tiles.
+   Number of tiles + their gap + the container gap.
+   */
   width: calc(
     var(--sprites-frame-gap) + (var(--sprites-frame-size) + var(--sprites-frame-gap)) *
       var(--sprites-frames-per-row)
@@ -60,6 +64,7 @@
 }
 
 .sprite-editor__sprite {
+  transition: background-color 0.2s;
   background: var(--sprites-background-color);
   padding: var(--sprites-frame-gap) 0 var(--sprites-frame-gap) var(--sprites-frame-gap);
 }
@@ -73,15 +78,20 @@
   margin-bottom: var(--sprites-frame-gap);
 }
 
-.sprite-editor__sprite-frames {
-}
-
+.sprite-editor__add-frame,
 .sprite-editor__sprite-frame {
+  transition: box-shadow 0.2s;
   display: inline-block;
-  vertical-align: middle;
+  padding: 0;
   margin: 0 var(--sprites-frame-gap) var(--sprites-frame-gap) 0;
   width: var(--sprites-frame-size);
   height: var(--sprites-frame-size);
+  vertical-align: middle;
+  text-align: center;
+  font-size: calc(var(--sprites-frame-size) * 0.5);
+  border: none;
+  line-height: var(--sprites-frame-size);
+  cursor: pointer;
 }
 .sprite-editor__sprite-frame--active {
   box-shadow: 0 2px 0 var(--sprites-background-color), 0 6px 0 #000;
@@ -89,5 +99,13 @@
 
 .sprite-editor__sprite-frame-canvas {
   width: 100%;
-  cursor: pointer;
+}
+
+.sprite-editor__add-frame {
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+.sprite-editor__add-frame:hover {
+  background: #000;
+  color: #fff;
 }

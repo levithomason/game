@@ -119,22 +119,32 @@ class GameSpriteEditor {
         const isFrameActive = this.activeFrame === frame
         const frameImageData = new ImageData(frame.imageData, frame.width)
 
-        const $frame = document.createElement('div')
+        const $frame = document.createElement('button')
         $frame.classList.add('sprite-editor__sprite-frame')
         if (isFrameActive) $frame.classList.add('sprite-editor__sprite-frame--active')
+        $frame.addEventListener('click', () => {
+          this.setActive(sprite, frame)
+        })
 
         const $canvas = document.createElement('canvas')
         $canvas.classList.add('sprite-editor__sprite-frame-canvas')
         $canvas.width = frame.width
         $canvas.height = frame.height
-        $canvas.addEventListener('click', () => {
-          this.setActive(sprite, frame)
-        })
         $canvas.getContext('2d').putImageData(frameImageData, 0, 0)
         $frame.appendChild($canvas)
 
         $frames.appendChild($frame)
       })
+
+      const $addFrame = document.createElement('button')
+      $addFrame.classList.add('sprite-editor__add-frame')
+      $addFrame.innerHTML = '+'
+      $addFrame.addEventListener('click', () => {
+        sprite.addFrame()
+        this.setActive(sprite, sprite.frames[sprite.frames.length - 1])
+        this.render()
+      })
+      $frames.appendChild($addFrame)
 
       this.$sprites.appendChild($sprite)
     })
