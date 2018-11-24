@@ -1,6 +1,11 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: monospace;
   color: #333;
+  padding: 1rem;
 }
 
 canvas {

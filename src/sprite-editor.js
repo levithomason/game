@@ -8,37 +8,32 @@ class GameSpriteEditor {
     this.setZoom = this.setZoom.bind(this)
     this.handleZoomChange = this.handleZoomChange.bind(this)
 
-    this.zoom = 8
-
     this.$root = document.createElement('div')
     this.$root.classList.add('sprite-editor')
+
+    this.$root.innerHTML = `
+      <div class="sprite-editor__view">
+        <canvas class="sprite-editor__canvas"></canvas>
+        <game-toolbar>
+          <game-toolbar-slider label="zoom" unit="x" min="1" max="20" value="8"></game-toolbar-slider>
+          <game-toolbar-button label="reset"></game-toolbar-button>
+        </game-toolbar>
+      </div>
+      <div class="sprite-editor__sprites"></div>
+`
+    this.$root.addEventListener('ontoolselect', (...args) => {
+      console.log('ontoolselect', ...args)
+    })
+    this.$root.addEventListener('ontoolchange', (...args) => {
+      console.log('ontoolchange', ...args)
+    })
+    this.$canvas = this.$root.querySelector('.sprite-editor__canvas')
+    this.$sprites = this.$root.querySelector('.sprite-editor__sprites')
     document.body.appendChild(this.$root)
 
-    this.$tools = document.createElement('div')
-    this.$tools.classList.add('sprite-editor__tools')
-    const $zoom = document.createElement('input')
-    $zoom.classList.add('sprite-editor__tool')
-    $zoom.style.width = '5rem'
-    $zoom.type = 'range'
-    $zoom.value = this.zoom
-    $zoom.min = 4
-    $zoom.max = 20
-    $zoom.addEventListener('input', this.handleZoomChange)
-    this.$tools.appendChild($zoom)
-    this.$root.appendChild(this.$tools)
-
-    this.$view = document.createElement('div')
-    this.$view.classList.add('sprite-editor__view')
-    this.$root.appendChild(this.$view)
-
-    this.$canvas = document.createElement('canvas')
-    this.$canvas.classList.add('sprite-editor__canvas')
-    this.$view.appendChild(this.$canvas)
+    // this.$toolbar.addEventListener('input', this.handleZoomChange)
 
     this.sprites = []
-    this.$sprites = document.createElement('div')
-    this.$sprites.classList.add('sprite-editor__sprites')
-    this.$root.appendChild(this.$sprites)
   }
 
   /**
@@ -59,7 +54,6 @@ class GameSpriteEditor {
    * @param {GameSpriteFrame} frame
    */
   setActive(sprite, frame) {
-    console.log(sprite, frame)
     this.activeSprite = sprite
     this.activeFrame = frame
     this.render()
@@ -74,7 +68,6 @@ class GameSpriteEditor {
   // handlers
   //
   handleZoomChange(e) {
-    console.log(e.target.value)
     this.setZoom(parseInt(e.target.value))
   }
 
@@ -96,8 +89,6 @@ class GameSpriteEditor {
   }
 
   renderSprites() {
-    console.log('renderSprites')
-
     this.$sprites.innerHTML = ''
 
     this.sprites.forEach(sprite => {
@@ -177,7 +168,6 @@ class GameSpriteEditor {
   }
 
   render() {
-    console.log('spriteEditor render')
     this.renderActiveFrame()
     this.renderSprites()
   }
