@@ -3,17 +3,13 @@
 }
 
 body {
-  font-family: monospace;
+  --font-size: 14px;
+
   color: #333;
-  padding: 1rem;
+  font-family: monospace;
+  font-size: var(--font-size);
 }
 
 canvas {
   image-rendering: pixelated;
-}
-
-#game {
-  display: block;
-  margin: 0 auto 1rem;
-  border: 1px solid black;
 }
