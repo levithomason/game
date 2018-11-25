@@ -1,12 +1,8 @@
 customElements.define(
   'game-toolbar',
-  class GameToolbar extends HTMLElement {
-    constructor() {
-      super()
-
-      this.attachShadow({ mode: 'open' })
-      const template = document.createElement('template')
-      template.innerHTML = `
+  class GameToolbar extends Component {
+    render() {
+      return `
         <style>
           :host {
             display: flex;
@@ -24,24 +20,19 @@ customElements.define(
           }
         </style>
         <slot></slot>
-`
-      this.shadowRoot.appendChild(template.content.cloneNode(true))
+      `
     }
   }
 )
 
 customElements.define(
   'game-toolbar-button',
-  class GameToolbarButton extends HTMLElement {
-    constructor() {
-      super()
-
+  class GameToolbarButton extends Component {
+    render() {
       const name = this.getAttribute('name') || ''
       const label = this.getAttribute('label') || ''
 
-      this.attachShadow({ mode: 'open' })
-      const template = document.createElement('template')
-      template.innerHTML = `
+      return `
         <style>
           button {
             color: inherit;
@@ -57,64 +48,46 @@ customElements.define(
           }
         </style>
         <button name="${name}">${label}</button>
-`
-      this.shadowRoot.appendChild(template.content.cloneNode(true))
+      `
     }
   }
 )
 
 customElements.define(
   'game-toolbar-slider',
-  class GameToolbarSlider extends HTMLElement {
+  class GameToolbarSlider extends Component {
     static get observedAttributes() {
       return ['align', 'label', 'max', 'min', 'name', 'unit', 'value']
     }
 
-    constructor() {
-      super()
-
-      this._updateStyle = this._updateStyle.bind(this)
-      this._upgradeProperties = this._upgradeProperties.bind(this)
-
-      this.startEditingInput = this.startEditingInput.bind(this)
-      this.stopEditingInput = this.stopEditingInput.bind(this)
-
-      this.handleInput = this.handleInput.bind(this)
-      this.handleInputKeyDown = this.handleInputKeyDown.bind(this)
-      this.handleSliderKeyDown = this.handleSliderKeyDown.bind(this)
-
+    render() {
       const label = this.getAttribute('label') || ''
       const value = this.getAttribute('value') || '50'
       const min = this.getAttribute('min') || '0'
       const max = this.getAttribute('max') || '100'
 
-      this.attachShadow({ mode: 'open' })
-      const template = document.createElement('template')
-      template.innerHTML = `
-        <style></style>
-        <label class="label">${label}</label>
-        <input class="slider" type="range" value="${value}" min="${min}" max="${max}">
-        <input class="input" value="${value}x">
-`
-      this.shadowRoot.appendChild(template.content.cloneNode(true))
+      return `
+        <style ref="style"></style>
+        <label ref="label" class="label">${label}</label>
+        <input ref="slider" class="slider" type="range" value="${value}" min="${min}" max="${max}">
+        <input ref="input" class="input" value="${value}x">
+      `
+    }
 
-      this.$style = this.shadowRoot.querySelector('style')
+    constructor() {
+      super()
 
-      this.$input = this.shadowRoot.querySelector('.input')
-      this.$input.addEventListener('focus', this.startEditingInput)
-      this.$input.addEventListener('blur', this.stopEditingInput)
-      this.$input.addEventListener('keydown', this.handleInputKeyDown)
-      this.$input.addEventListener('input', this.handleInput)
+      this.refs.input.addEventListener('focus', this.startEditingInput)
+      this.refs.input.addEventListener('blur', this.stopEditingInput)
+      this.refs.input.addEventListener('keydown', this.handleInputKeyDown)
+      this.refs.input.addEventListener('input', this.handleInput)
 
-      this.$label = this.shadowRoot.querySelector('.label')
-
-      this.$slider = this.shadowRoot.querySelector('.slider')
-      this.$slider.addEventListener('input', this.handleInput)
-      this.$slider.addEventListener('keydown', this.handleSliderKeyDown)
+      this.refs.slider.addEventListener('input', this.handleInput)
+      this.refs.slider.addEventListener('keydown', this.handleSliderKeyDown)
     }
 
     _updateStyle() {
-      this.$style.textContent = `
+      this.refs.style.textContent = `
         :host {
           ${!this.align ? '' : this.align === 'left' ? 'margin-right: auto' : 'margin-left: auto'};
         }
@@ -208,61 +181,56 @@ customElements.define(
           this._updateStyle()
           break
         case 'label':
-          this.$label = newValue
+          this.refs.label = newValue
           break
         case 'max':
-          this.$slider.max = newValue
-          this.$input.max = newValue
+          this.refs.slider.max = newValue
+          this.refs.input.max = newValue
           break
         case 'min':
-          this.$slider.min = newValue
-          this.$input.min = newValue
+          this.refs.slider.min = newValue
+          this.refs.input.min = newValue
           break
         case 'name':
-          this.$slider.name = newValue
-          this.$input.name = newValue
+          this.refs.slider.name = newValue
+          this.refs.input.name = newValue
           break
         case 'unit':
-          this.$input.value = this.valueWithUnit
+          this.refs.input.value = this.valueWithUnit
           break
         case 'value':
-          this.$slider.value = newValue
-          this.$input.value = this.isEditingInput ? newValue : this.valueWithUnit
+          this.refs.slider.value = newValue
+          this.refs.input.value = this.isEditingInput ? newValue : this.valueWithUnit
           break
       }
     }
 
     get isEditingInput() {
-      return this.$input.classList.contains('input--editing')
+      return this.refs.input.classList.contains('input--editing')
     }
 
     startEditingInput() {
-      this.$input.value = this.value
-      this.$input.type = 'number'
-      this.$input.classList.add('input--editing')
-      this.$input.select()
+      this.refs.input.value = this.value
+      this.refs.input.type = 'number'
+      this.refs.input.classList.add('input--editing')
+      this.refs.input.select()
     }
 
     stopEditingInput() {
-      this.$input.type = 'text'
-      this.$input.value = this.valueWithUnit
-      this.$input.classList.remove('input--editing')
+      this.refs.input.type = 'text'
+      this.refs.input.value = this.valueWithUnit
+      this.refs.input.classList.remove('input--editing')
     }
 
     handleInput(e) {
       this.value = e.target.value
-      this.dispatchEvent(
-        new CustomEvent('input', {
-          detail: { name: this.name, value: this.value },
-          bubbles: true,
-        })
-      )
+      this.emit('input', { name: this.name, value: this.value })
     }
 
     handleInputKeyDown(e) {
       if (e.key === 'Escape' || e.key === 'Enter') {
         this.stopEditingInput()
-        this.$slider.focus()
+        this.refs.slider.focus()
       }
     }
 
