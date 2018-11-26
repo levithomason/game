@@ -113,10 +113,10 @@ customElements.define(
 
       const template = document.createElement('template')
       template.innerHTML = `
-          <button ${this.active ? 'active' : ''} class="frame">
-            <canvas class="frame-canvas" width="${frame.width}" height="${frame.height}"></canvas>
-          </button>
-        `
+        <button ${this.active ? 'active' : ''} class="frame">
+          <canvas class="frame-canvas" width="${frame.width}" height="${frame.height}"></canvas>
+        </button>
+      `
 
       this.refs.frames.appendChild(template.content.cloneNode(true))
       const frameChildren = this.refs.frames.querySelectorAll('.frame')

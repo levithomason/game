@@ -15,10 +15,6 @@ customElements.define(
       return `
         <link rel="stylesheet" href="/game.css" >
         <style>
-          /****************************
-                 Sprite Editor
-          ****************************/
-  
           :host {
             display: grid;
             grid-template:
@@ -30,7 +26,6 @@ customElements.define(
           /****************************
                       View
           ****************************/
-  
           .sprite-editor__view {
             grid-area: view;
             display: flex;
@@ -49,7 +44,6 @@ customElements.define(
           /****************************
                  TEMP CSS GRID
           ****************************/
-  
           .toolbar {
             grid-area: toolbar;
             border: 2px solid #000;
