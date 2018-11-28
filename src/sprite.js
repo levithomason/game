@@ -1,4 +1,29 @@
-class GameSpriteFrame {
+export class GameSprite {
+  constructor(name = gameUtils.randomName(), { width = 16, height = 16 } = {}) {
+    this.width = width
+    this.height = height
+    this.name = name
+
+    this.frames = []
+    this.currentFrame = this.addFrame()
+
+    this.speed = 30
+  }
+
+  addFrame() {
+    const frame = new GameSpriteFrame({
+      sprite: this,
+      width: this.width,
+      height: this.height,
+    })
+
+    this.frames.push(frame)
+
+    return frame
+  }
+}
+
+export class GameSpriteFrame {
   /**
    * @param {GameSprite} sprite
    * @param {number} width
@@ -23,30 +48,5 @@ class GameSpriteFrame {
       this.imageData[i + 2] = Math.round(Math.random() * 255) // backgroundColor[2] // B value
       this.imageData[i + 3] = Math.round(Math.random() * 255) // backgroundColor[3] // A value
     }
-  }
-}
-
-class GameSprite {
-  constructor(name = gameUtils.randomName(), { width = 16, height = 16 } = {}) {
-    this.width = width
-    this.height = height
-    this.name = name
-
-    this.frames = []
-    this.currentFrame = this.addFrame()
-
-    this.speed = 30
-  }
-
-  addFrame() {
-    const frame = new GameSpriteFrame({
-      sprite: this,
-      width: this.width,
-      height: this.height,
-    })
-
-    this.frames.push(frame)
-
-    return frame
   }
 }

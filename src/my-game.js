@@ -1,3 +1,6 @@
+import Game, { GameObject } from './game.js'
+import { GameSprite } from './sprite.js'
+
 //
 // My Game
 //

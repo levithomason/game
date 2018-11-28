@@ -1,4 +1,4 @@
-class Game {
+export default class Game {
   constructor(opts = {}) {
     this.running = false
     this.objects = []
@@ -46,7 +46,7 @@ class Game {
 // Objects
 //
 
-class GameObject {
+export class GameObject {
   constructor(opts = {}) {
     this.height = opts.height || 5
     this.width = opts.width || 5

@@ -1,3 +1,5 @@
+import Component from './component.js'
+
 customElements.define(
   'game-sprite-editor-sprite',
   class GameSpriteEditorSprite extends Component {
